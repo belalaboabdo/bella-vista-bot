@@ -2,6 +2,12 @@
 
 An AI-powered SMS reply bot sandbox for **Bella Vista**, an upscale Italian restaurant. Guests interact with the bot via a simulated text conversation to manage reservations, log dietary preferences, and more. The bot understands natural language, takes real actions against the database, and provides a conversation summary at the end of each session.
 
+## Example Conversation
+
+The screenshot below shows a full conversation with Maria Chen demonstrating all 4 bot actions: booking a reservation, logging a dietary note (pork allergy), modifying the reservation date, and cancelling it. The right panel shows the action log and auto-generated conversation summary.
+
+![Example Conversation](public/sample_conversation.png)
+
 ## Design Rationale
 
 ### Tech Stack
