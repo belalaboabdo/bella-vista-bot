@@ -74,7 +74,47 @@ npm run dev
 npm test
 ```
 
-25 integration tests covering all 4 bot actions (book, modify, cancel, add note), hours-of-operation enforcement, error handling, and conversation summary generation.
+## Test Coverage
+
+25 integration tests that hit the real database to verify every bot action produces the correct outcome. No mocks -- each test seeds the database, executes a tool, and asserts the DB state changed correctly.
+
+### bookReservation (7 tests)
+- Creates a new reservation and assigns a table in the DB
+- Assigns the smallest available table that fits the party size
+- Saves optional notes on the reservation
+- Returns "no table available" when all tables are booked at the requested time
+- **Rejects bookings before opening hours** (e.g., 09:00 when restaurant opens at 11:00)
+- **Rejects bookings at or after closing time** (e.g., 23:00 when restaurant closes at 23:00)
+- Allows bookings within operating hours
+
+### modifyReservation (7 tests)
+- Updates the date of an existing reservation
+- Updates the time of an existing reservation
+- Updates the party size
+- Reassigns to a larger table when party size exceeds current table capacity
+- Updates notes on an existing reservation
+- Updates multiple fields (date, time, party size) in a single call
+- **Rejects modifying time to outside operating hours**
+- Returns "not found" for non-existent reservation ID
+
+### cancelReservation (3 tests)
+- Sets reservation status to "cancelled" in the DB
+- Preserves the reservation row (soft delete, not hard delete)
+- Returns "not found" for non-existent reservation ID
+
+### addGuestNote (5 tests)
+- Appends a dietary note to the guest record
+- Appends to existing dietary info without replacing it
+- Appends a preference note to the guest's notes field
+- Handles adding a note to a guest with no existing notes
+- Returns "not found" for non-existent guest ID
+
+### Conversation Summary (1 test)
+- Generates a summary via the Claude API from a multi-turn conversation
+- Verifies the summary references key actions (reservation changes, dietary notes)
+
+### Error Handling (1 test)
+- Throws an error for unknown tool names
 
 ## Database Schema
 
