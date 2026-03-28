@@ -24,9 +24,9 @@ export default function ChatMessage({ message }: { message: ChatMessageType }) {
         >
           <p className="whitespace-pre-wrap">{message.content}</p>
         </div>
-        {message.actions && message.actions.length > 0 && (
+        {message.actions && message.actions.filter((a) => !a.result.includes("Not found")).length > 0 && (
           <div className="mt-1.5 space-y-1">
-            {message.actions.map((action, i) => {
+            {message.actions.filter((a) => !a.result.includes("Not found")).map((action, i) => {
               const colors = actionColors[action.tool] || {
                 bg: "bg-[var(--bg-input)]",
                 text: "text-[var(--text-secondary)]",

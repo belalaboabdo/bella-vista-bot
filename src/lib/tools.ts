@@ -50,7 +50,7 @@ export const toolDefinitions: Anthropic.Tool[] = [
   {
     name: "addGuestNote",
     description:
-      "Log a special request, dietary need, allergy, or preference for a guest. This updates the guest's record.",
+      "Log a special request, dietary need, allergy, or preference for a guest. This updates the guest's profile record. Only call this ONCE per note — the note is stored on the guest, not on a reservation. Use the guest's numeric ID (e.g., 1, 2, 3), not a reservation ID.",
     input_schema: {
       type: "object" as const,
       properties: {
