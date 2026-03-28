@@ -100,7 +100,7 @@ async function bookReservation(
   input: Record<string, unknown>,
   timestamp: string
 ): Promise<ToolResult> {
-  const { guestId, date, time, partySize, notes, preferredLocation } = input as {
+  const { date, time, notes, preferredLocation } = input as {
     guestId: number;
     date: string;
     time: string;
@@ -108,6 +108,8 @@ async function bookReservation(
     notes?: string;
     preferredLocation?: string;
   };
+  const guestId = Number(input.guestId);
+  const partySize = Number(input.partySize);
 
   // Validate against restaurant hours
   const restaurant = await prisma.restaurant.findFirst({ where: { id: 1 } });
@@ -191,13 +193,15 @@ async function modifyReservation(
   input: Record<string, unknown>,
   timestamp: string
 ): Promise<ToolResult> {
-  const { reservationId, date, time, partySize, notes } = input as {
+  const { date, time, notes } = input as {
     reservationId: number;
     date?: string;
     time?: string;
     partySize?: number;
     notes?: string;
   };
+  const reservationId = Number(input.reservationId);
+  const partySize = input.partySize ? Number(input.partySize) : undefined;
 
   // Validate time change against restaurant hours
   if (time) {
@@ -274,7 +278,7 @@ async function cancelReservation(
   input: Record<string, unknown>,
   timestamp: string
 ): Promise<ToolResult> {
-  const { reservationId } = input as { reservationId: number };
+  const reservationId = Number(input.reservationId);
 
   const existing = await prisma.reservation.findUnique({
     where: { id: reservationId },
@@ -307,11 +311,12 @@ async function addGuestNote(
   input: Record<string, unknown>,
   timestamp: string
 ): Promise<ToolResult> {
-  const { guestId, note, type } = input as {
+  const { note, type } = input as {
     guestId: number;
     note: string;
     type: "dietary" | "preference";
   };
+  const guestId = Number(input.guestId);
 
   const guest = await prisma.guest.findUnique({ where: { id: guestId } });
   if (!guest) {
